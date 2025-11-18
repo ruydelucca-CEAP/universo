@@ -6,15 +6,132 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ESTILO GERAL PARA PLANOS DE FUNDO */
+/* --- ESTILO GERAL PARA PLANOS DE FUNDO E TEXTO --- */
 body {
     background-color: #0d0c1d; 
     color: #f0f0f0;
     min-height: 100vh;
 }
 
-/* --- ESTILOS DA CAPA (index.html) --- */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ------------------------------------------------ */
+/* --- NOVOS ESTILOS GERAIS PARA O NOVO INDEX --- */
+/* ------------------------------------------------ */
+
+/* HEADER & NAV */
+header {
+    background-color: #050518; /* Fundo muito escuro para contraste */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8em;
+    color: #8affff; /* Título neon */
+    text-shadow: 0 0 5px #00ffff;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+nav a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+nav a:hover {
+    color: #007bff;
+    text-shadow: 0 0 8px #007bff;
+}
+
+/* MAIN CONTENT */
+main {
+    padding-bottom: 50px;
+}
+
+/* HERO SECTION / APOD */
+#hero {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 50px 0;
+    background: url('assets/images/capa-fundo.jpg') no-repeat center center/cover;
+    background-attachment: fixed; /* Efeito Parallax */
+}
+
+#hero .container {
+    background-color: rgba(13, 12, 29, 0.85); /* Fundo semi-transparente para o conteúdo */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+}
+
+#hero h2 {
+    font-size: 3em;
+    color: #ffcc00; 
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+}
+
+.apod {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #1a192f;
+    border-radius: 10px;
+    border: 1px solid #4400ff; 
+    box-shadow: 0 0 10px rgba(68, 0, 255, 0.5);
+}
+
+#apod-content h4 {
+    color: #007bff;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+#apod-content img,
+#apod-content iframe {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* FOOTER */
+footer {
+    background-color: #050518;
+    color: #cccccc;
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid #1a192f;
+}
+
+/* --- ESTILOS ANTIGOS/MANTIDOS --- */
 .capa-principal {
+    /* Mantenho, mas o novo index não a usa mais */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -279,5 +396,30 @@ body {
     100% { 
         transform: scaleX(1); 
         opacity: 1;
+    }
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    nav.container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    nav ul {
+        gap: 15px;
+    }
+
+    #hero h2 {
+        font-size: 2em;
+    }
+
+    .constelacao-detalhes {
+        flex-direction: column;
+    }
+
+    .texto-info,
+    .animacao-area {
+        flex-basis: 100%;
     }
 }
