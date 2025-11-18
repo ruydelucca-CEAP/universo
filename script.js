@@ -1,5 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ------------------------------------------------------------------------
+    // ** LÓGICA DA PÁGINA INICIAL: NASA APOD **
+    // ------------------------------------------------------------------------
+    
+    // NOTA: Para uso em produção, substitua 'DEMO_KEY' pela sua chave de API pessoal da NASA.
+    const APOD_API_KEY = 'dot5XkVQEMrNIAMawvRL0FMIhmAqJ8S83Iw3X7np'; 
+    const APOD_URL = `https://api.nasa.gov/planetary/apod?api_key=${APOD_API_KEY}`;
+    const apodContainer = document.getElementById('apod-content');
+
+    if (apodContainer) {
+        fetch(APOD_URL)
+            .then(response => response.json())
+            .then(data => {
+                let mediaHTML = '';
+                
+                // Trata Imagem ou Vídeo
+                if (data.media_type === 'image') {
+                    mediaHTML = `<img src="${data.url}" alt="${data.title}">`;
+                } else if (data.media_type === 'video') {
+                    // Incorpora o vídeo (YouTube)
+                    mediaHTML = `<iframe width="100%" height="315" src="${data.url.replace('http:', 'https:')}" frameborder="0" allowfullscreen></iframe>`;
+                }
+                
+                // Injeta o conteúdo no HTML
+                apodContainer.innerHTML = `
+                    ${mediaHTML}
+                    <h4>${data.title} (${data.date})</h4>
+                    <p>${data.explanation}</p>
+                `;
+            })
+            .catch(error => {
+                console.error('Erro ao buscar dados da NASA APOD:', error);
+                apodContainer.innerHTML = '<p>Falha ao carregar a Imagem do Dia. Por favor, tente novamente mais tarde.</p>';
+            });
+    }
+
+    // ------------------------------------------------------------------------
     // ** DADOS E LÓGICA PARA PÁGINA DE PLANETAS **
     // ------------------------------------------------------------------------
 
@@ -9,42 +45,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const planetasData = {
         'mercurio': {
             nome: "MERCÚRIO",
-            texto: "MERCÚRIO é o planeta mais próximo do Sol... (Texto omitido para brevidade)",
+            texto: "Mercúrio é o planeta mais próximo do Sol e o menor de todos os oito planetas principais. Ele orbita o Sol mais rapidamente do que qualquer outro planeta, completando uma volta em apenas 88 dias terrestres. Devido à sua proximidade com o Sol e à sua fina atmosfera, Mercúrio tem as maiores variações de temperatura no Sistema Solar, com temperaturas que variam drasticamente entre o lado iluminado (que pode atingir 430 °C) e o lado escuro (que pode cair para -180° C). Ele não possui luas nem anéis.",
             corDestaque: '#e5e5e5' 
         },
         'venus': {
             nome: "VÊNUS",
-            texto: "VÊNUS é o planeta que rege o Amor, a Beleza... (Texto omitido para brevidade)",
+            texto: "Vênus é o segundo planeta a partir do Sol. É muitas vezes chamado de 'planeta irmão' da Terra devido ao seu tamanho e composição semelhantes, mas é um mundo radicalmente diferente. Vênus é envolto por uma atmosfera densa e tóxica, composta principalmente por dióxido de carbono, que cria um efeito estufa extremo, tornando-o o planeta mais quente do Sistema Solar (com uma temperatura superficial média de cerca de 471 °C). Ele gira muito lentamente e em sentido oposto à maioria dos planetas (rotação retrógrada). Vênus também não tem luas nem anéis.",
             corDestaque: '#ffcc00' 
         },
         'marte': {
             nome: "MARTE",
-            texto: "Marte é o quarto planeta do Sistema Solar... (Texto omitido para brevidade)",
+            texto: "Marte é o quarto planeta a partir do Sol e é frequentemente chamado de 'Planeta Vermelho' devido à cor de sua superfície, causada pelo óxido de ferro (ferrugem) em suas rochas e solo. É um planeta rochoso e frio, com uma atmosfera fina. Em Marte, há evidências de que a água líquida fluiu em sua superfície no passado, e atualmente existe água congelada nas calotas polares e debaixo da superfície. Marte tem as maiores montanhas e os maiores cânions do Sistema Solar e possui duas pequenas luas, Fobos e Deimos.",
             corDestaque: '#ff4000ff' 
         },
         'jupiter': {
             nome: "JÚPITER",
-            texto: "Júpiter é o maior planeta do Sistema Solar... (Texto omitido para brevidade)",
+            texto: "Júpiter é o quinto planeta a partir do Sol e o maior planeta do nosso sistema, sendo duas vezes e meia mais massivo que todos os outros planetas juntos. É um gigante gasoso, composto principalmente por hidrogênio e hélio. Júpiter é famoso por sua Grande Mancha Vermelha, uma tempestade gigantesca que dura séculos e é maior que a Terra. Júpiter tem um poderoso campo magnético, um sistema de anéis tênue e a maior coleção de luas de qualquer planeta (mais de 90 luas confirmadas), incluindo as quatro grandes luas galileanas: Io, Europa, Ganimedes e Calisto.",
             corDestaque: '#ff9728ff' 
         },
         'saturno': {
             nome: "SATURNO",
-            texto: "Saturno é o sexto planeta do sistema solar... (Texto omitido para brevidade)",
+            texto: "Saturno é o sexto planeta a partir do Sol e o segundo maior. É o planeta mais conhecido por seu espetacular e extenso sistema de anéis, que são feitos de bilhões de pedaços de gelo e rocha. Como Júpiter, Saturno é um gigante gasoso composto principalmente por hidrogênio e hélio. É o planeta menos denso do Sistema Solar; se houvesse uma banheira grande o suficiente, Saturno flutuaria nela. Possui um grande número de luas, sendo Titã sua lua mais famosa, por ter uma atmosfera densa e lagos de metano líquido.",
             corDestaque: '#ffb668ff' 
         },
         'urano': {
             nome: "URANO",
-            texto: "Urano é o sétimo planeta a partir do Sol... (Texto omitido para brevidade)",
+            texto: "Urano é o sétimo planeta a partir do Sol e um gigante de gelo. Sua cor azul-esverdeada é devida ao metano em sua atmosfera. Urano é único porque seu eixo de rotação é inclinado em quase $98$ graus em relação ao seu plano orbital, o que significa que ele rola como uma bola enquanto orbita o Sol. Sua rotação lateral causa estações extremas e incomuns. Possui um sistema de anéis fraco e várias luas, incluindo Titania e Oberon.",
             corDestaque: '#68e8ffff' 
         },
         'netuno': {
             nome: "NETUNO",
-            texto: "Netuno é o oitavo e último planeta do Sistema Solar... (Texto omitido para brevidade)",
+            texto: "Netuno é o oitavo e mais distante planeta conhecido do Sol. É um gigante de gelo como Urano, mas tem uma cor azul mais rica. Netuno é famoso por ter os ventos mais rápidos do Sistema Solar, atingindo velocidades supersônicas. Sua descoberta foi notável por ter sido a primeira prevista por cálculos matemáticos antes de ser observada. Possui um sistema de anéis e várias luas, sendo Tritão a maior e mais intrigante, por orbitar o planeta no sentido oposto (órbita retrógrada).",
             corDestaque: '#005effff' 
         },
         'terra': {
             nome: "TERRA",
-            texto: "A Terra é o terceiro planeta do Sistema Solar... (Texto omitido para brevidade)",
+            texto: "A Terra é o terceiro planeta a partir do Sol e o único lugar no universo onde se sabe que existe vida. Sua superfície é coberta por cerca de 71% de água, o que lhe confere a cor azul vista do espaço. A Terra tem uma atmosfera rica em nitrogênio e oxigênio que protege a vida e modera as temperaturas. Ela possui uma única lua grande, que desempenha um papel crucial na estabilização da inclinação do eixo do planeta e na criação das marés oceânicas. A Terra é o maior dos quatro planetas rochosos (terrestres).",
             corDestaque: '#005effff' 
         },
     };
@@ -141,138 +177,142 @@ document.addEventListener('DOMContentLoaded', () => {
     if (constelacaoButtons.length > 0) {
         applyEventListeners(constelacaoButtons, infoConstelacaoDiv, constelacoesData, true);
     }
+
+
+    // ------------------------------------------------------------------------
+    // ** FUNÇÕES AUXILIARES (mantidas) **
+    // ------------------------------------------------------------------------
+    
+    /**
+     * Função para calcular a distância e o ângulo entre dois pontos (estrelas)
+     */
+    function getLineProperties(x1, y1, x2, y2) {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const length = Math.sqrt(dx * dx + dy * dy); // Distância (em pixels, mas funciona com %)
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI); // Ângulo em graus
+        return { length, angle };
+    }
+
+    /**
+     * Função genérica para aplicar listeners de clique
+     * @param {NodeList} buttons - Os botões (planetas ou constelações)
+     * @param {HTMLElement} infoDiv - A div de informação (info-planeta ou info-constelacao)
+     * @param {Object} dataMap - O dicionário de dados (planetasData ou constelacoesData)
+     * @param {boolean} isConstellation - Define se deve aplicar a lógica de animação de constelação
+     */
+    function applyEventListeners(buttons, infoDiv, dataMap, isConstellation) {
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                const itemClicado = this.getAttribute('data-planeta') || this.getAttribute('data-constelacao');
+                const data = dataMap[itemClicado];
+
+                if (data) {
+                    // 1. Remove a classe de animação para resetar
+                    infoDiv.classList.remove('aparecer');
+
+                    // Adiciona um pequeno atraso antes de atualizar e re-aplicar a animação
+                    setTimeout(() => {
+                        let content = `
+                            <h3>${data.nome}</h3>
+                            <div class="constelacao-detalhes">
+                                <div class="texto-info">
+                                    <p>${data.texto.replace(/\n/g, '<br>')}</p>
+                                </div>
+                        `;
+
+                        if (isConstellation) {
+                            // 2. Cria a área da animação para constelações
+                            content += `
+                                <div class="animacao-area">
+                                    <div id="constellation-animation-container"></div>
+                                </div>
+                            </div> `;
+                        } else {
+                            content += `</div>`; // Fechar a div se for planeta
+                        }
+                        
+                        // 3. Atualiza o conteúdo da div
+                        infoDiv.innerHTML = content;
+                        
+                        // 4. Se for constelação, dispara a função de animação
+                        if (isConstellation) {
+                            drawConstellation(itemClicado, data.positions, data.lines);
+                        }
+                        
+                        // 5. Adiciona a classe para fazer o texto aparecer suavemente
+                        infoDiv.classList.add('aparecer');
+                        
+                    }, 10);
+                }
+            });
+
+            // 6. Adiciona a animação de clique
+            button.addEventListener('mousedown', function() {
+                this.style.transform = isConstellation ? 'scale(0.98)' : 'scale(0.95)';
+            });
+
+            button.addEventListener('mouseup', function() {
+                this.style.transform = isConstellation ? 'scale(1.05)' : 'scale(1.1) rotate(0deg)'; 
+            });
+
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = ''; 
+            });
+        });
+    }
+
+    /**
+     * Função que desenha a constelação e a animação de laser
+     * @param {string} id - ID da constelação
+     * @param {Array<Array<number>>} positions - Lista de [x, y] de cada estrela (0-100)
+     * @param {Array<Array<number>>} lines - Lista de [indexInicial, indexFinal] das linhas
+     */
+    function drawConstellation(id, positions, lines) {
+        const container = document.getElementById('constellation-animation-container');
+        if (!container) return;
+
+        const stars = [];
+
+        // 1. Cria as estrelas (pontos)
+        positions.forEach((pos, index) => {
+            const star = document.createElement('div');
+            star.className = 'star';
+            // Posicionamento absoluto dentro da área de animação
+            star.style.left = `${pos[0]}%`;
+            star.style.top = `${pos[1]}%`;
+            // Ajuste para centralizar o ponto na posição
+            star.style.transform = 'translate(-50%, -50%)'; 
+            star.style.animationDelay = `${index * 0.1}s`; // Faz as estrelas aparecerem em sequência
+            container.appendChild(star);
+            stars.push(star);
+        });
+
+        // 2. Cria as linhas (o "laser")
+        lines.forEach((lineIndices, lineIndex) => {
+            const startStarIndex = lineIndices[0];
+            const endStarIndex = lineIndices[1];
+
+            const startPos = positions[startStarIndex];
+            const endPos = positions[endStarIndex];
+
+            // 3. Obtém as propriedades de geometria
+            const { length, angle } = getLineProperties(startPos[0], startPos[1], endPos[0], endPos[1]);
+            
+            const line = document.createElement('div');
+            line.className = 'constelacao-linha';
+
+            // 4. Posiciona e Rotaciona a linha
+            line.style.left = `${startPos[0]}%`;
+            line.style.top = `${startPos[1]}%`;
+            line.style.width = `${length}%`;
+            line.style.transform = `rotate(${angle}deg)`;
+            
+            // 5. Define o atraso da animação (espera as estrelas aparecerem)
+            const starDelay = Math.max(startStarIndex, endStarIndex) * 0.1;
+            line.style.animationDelay = `${starDelay + (lineIndex * 0.3)}s`;
+            
+            container.appendChild(line);
+        });
+    }
 });
-
-
-/**
- * Função para calcular a distância e o ângulo entre dois pontos (estrelas)
- */
-function getLineProperties(x1, y1, x2, y2) {
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const length = Math.sqrt(dx * dx + dy * dy); // Distância (em pixels, mas funciona com %)
-    const angle = Math.atan2(dy, dx) * (180 / Math.PI); // Ângulo em graus
-    return { length, angle };
-}
-
-/**
- * Função genérica para aplicar listeners de clique
- * @param {NodeList} buttons - Os botões (planetas ou constelações)
- * @param {HTMLElement} infoDiv - A div de informação (info-planeta ou info-constelacao)
- * @param {Object} dataMap - O dicionário de dados (planetasData ou constelacoesData)
- * @param {boolean} isConstellation - Define se deve aplicar a lógica de animação de constelação
- */
-function applyEventListeners(buttons, infoDiv, dataMap, isConstellation) {
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            const itemClicado = this.getAttribute('data-planeta') || this.getAttribute('data-constelacao');
-            const data = dataMap[itemClicado];
-
-            if (data) {
-                // 1. Remove a classe de animação para resetar
-                infoDiv.classList.remove('aparecer');
-
-                // Adiciona um pequeno atraso antes de atualizar e re-aplicar a animação
-                setTimeout(() => {
-                    let content = `
-                        <h3>${data.nome}</h3>
-                        <div class="constelacao-detalhes">
-                            <div class="texto-info">
-                                <p>${data.texto.replace(/\n/g, '<br>')}</p>
-                            </div>
-                    `;
-
-                    if (isConstellation) {
-                        // 2. Cria a área da animação para constelações
-                        content += `
-                            <div class="animacao-area">
-                                <div id="constellation-animation-container"></div>
-                            </div>
-                        </div> `;
-                    } else {
-                        content += `</div>`; // Fechar a div se for planeta
-                    }
-                    
-                    // 3. Atualiza o conteúdo da div
-                    infoDiv.innerHTML = content;
-                    
-                    // 4. Se for constelação, dispara a função de animação
-                    if (isConstellation) {
-                        drawConstellation(itemClicado, data.positions, data.lines);
-                    }
-                    
-                    // 5. Adiciona a classe para fazer o texto aparecer suavemente
-                    infoDiv.classList.add('aparecer');
-                    
-                }, 10);
-            }
-        });
-
-        // 6. Adiciona a animação de clique
-        button.addEventListener('mousedown', function() {
-            this.style.transform = isConstellation ? 'scale(0.98)' : 'scale(0.95)';
-        });
-
-        button.addEventListener('mouseup', function() {
-            this.style.transform = isConstellation ? 'scale(1.05)' : 'scale(1.1) rotate(0deg)'; 
-        });
-
-        button.addEventListener('mouseleave', function() {
-            this.style.transform = ''; 
-        });
-    });
-}
-
-/**
- * Função que desenha a constelação e a animação de laser
- * @param {string} id - ID da constelação
- * @param {Array<Array<number>>} positions - Lista de [x, y] de cada estrela (0-100)
- * @param {Array<Array<number>>} lines - Lista de [indexInicial, indexFinal] das linhas
- */
-function drawConstellation(id, positions, lines) {
-    const container = document.getElementById('constellation-animation-container');
-    if (!container) return;
-
-    const stars = [];
-
-    // 1. Cria as estrelas (pontos)
-    positions.forEach((pos, index) => {
-        const star = document.createElement('div');
-        star.className = 'star';
-        // Posicionamento absoluto dentro da área de animação
-        star.style.left = `${pos[0]}%`;
-        star.style.top = `${pos[1]}%`;
-        // Ajuste para centralizar o ponto na posição
-        star.style.transform = 'translate(-50%, -50%)'; 
-        star.style.animationDelay = `${index * 0.1}s`; // Faz as estrelas aparecerem em sequência
-        container.appendChild(star);
-        stars.push(star);
-    });
-
-    // 2. Cria as linhas (o "laser")
-    lines.forEach((lineIndices, lineIndex) => {
-        const startStarIndex = lineIndices[0];
-        const endStarIndex = lineIndices[1];
-
-        const startPos = positions[startStarIndex];
-        const endPos = positions[endStarIndex];
-
-        // 3. Obtém as propriedades de geometria
-        const { length, angle } = getLineProperties(startPos[0], startPos[1], endPos[0], endPos[1]);
-        
-        const line = document.createElement('div');
-        line.className = 'constelacao-linha';
-
-        // 4. Posiciona e Rotaciona a linha
-        line.style.left = `${startPos[0]}%`;
-        line.style.top = `${startPos[1]}%`;
-        line.style.width = `${length}%`;
-        line.style.transform = `rotate(${angle}deg)`;
-        
-        // 5. Define o atraso da animação (espera as estrelas aparecerem)
-        const starDelay = Math.max(startStarIndex, endStarIndex) * 0.1;
-        line.style.animationDelay = `${starDelay + (lineIndex * 0.3)}s`;
-        
-        container.appendChild(line);
-    });
-}
